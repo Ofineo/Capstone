@@ -17,7 +17,7 @@ def create_app(test_config=None):
   @app.after_request
   def after_request(response):
     response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization,true')
-    response.headers.add('Access-Control-Allow-Methods', 'GET,POST,DELETE,OPTIONS')
+    response.headers.add('Access-Control-Allow-Methods', 'GET,POST,DELETE,OPTIONS,PATCH')
     return response
 
   @app.route('/')
@@ -93,7 +93,41 @@ def create_app(test_config=None):
       'status': True,
       'movie': id
     })
-  
+
+  @app.route('/actors/add', methods=['POST'])
+  def post_actor():
+    res = request.get_json()
+   
+    if not res:
+      abort(400)
+
+    try:
+      actor = Actor(
+        name=res['name'],
+        age=res['age'],
+        gender=res['gender']
+      )
+      actor.insert()
+      return jsonify({
+        'status': True,
+        'actor': [actor.format()] 
+      })
+
+    except Exception as e:
+      print('we couldnt create the object', e)
+
+      return 'not ideal'
+
+    
+
+    
+   
+    
+    # @app.route('/actors/<id>', methods=['PATCH'])
+    # def patch_actor(id):
+
+
+
 
 
 
