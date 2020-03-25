@@ -111,9 +111,10 @@ class Movie(db.Model):
     actor_id = Column(Integer, ForeignKey('actor.id'))
     actor = relationship("Actor", back_populates="movie")
     
-    def __init__(self, title, releaseDate):
-      self.title = name
-      self.releaseDate = age
+    def __init__(self, title, releaseDate, actor_id):
+      self.title = title
+      self.releaseDate = releaseDate
+      self.actor_id = actor_id
     
     '''
      insert()
@@ -156,6 +157,6 @@ class Movie(db.Model):
       return {
         'id': self.id,
         'title': self.title,
-        'relese date': self.releaseDate,
+        'release date': self.releaseDate,
       }
     

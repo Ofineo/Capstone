@@ -153,7 +153,6 @@ def create_app(test_config=None):
       abort(404)
     
     actor = Actor.query.get(id)
-    print(actor)
     
     try:
       if 'name' in res:
@@ -171,9 +170,37 @@ def create_app(test_config=None):
 
     return jsonify({
             'status': True,
-            'movie': [actor.format()] 
+            'actor': [actor.format()] 
           })
+
     
+  @app.route('/movies/<id>', methods=['PATCH'])
+  def patch_movies(id):
+    res = request.get_json()
+
+    if not res:
+      abort(404)
+    
+    movie = Movie.query.get(id)
+    
+    try:
+      if 'title' in res:
+        movie.title=  res['title']
+      if 'releaseDate' in res:
+        movie.releaseDate=   res['releaseDate']
+      if 'actor_id' in res:
+        movie.actor_id=  res['actor_id']
+      
+      movie.update()
+
+    except Exception as e:
+      print('we couldnt create the object. Reason :', e)
+      abort(500)
+
+    return jsonify({
+            'status': True,
+            'movie': [movie.format()] 
+          })
 
 
   return app
