@@ -108,31 +108,42 @@ def create_app(test_config=None):
         gender=res['gender']
       )
       actor.insert()
-      return jsonify({
-        'status': True,
-        'actor': [actor.format()] 
-      })
-
+     
     except Exception as e:
       print('we couldnt create the object', e)
+      abort(500)
+    return jsonify({
+      'status': True,
+      'actor': [actor.format()] 
+      })
 
-      return 'not ideal'
 
-    
-
-    
+  @app.route('/movies/add', methods=['POST'])
+  def post_movies():
+    res = request.get_json()
    
-    
-    # @app.route('/actors/<id>', methods=['PATCH'])
-    # def patch_actor(id):
+    x = datetime.datetime(2020, 5, 17)
+ 
+    if not res:
+      abort(400)
+      
+    try:
+      movie = Movie(
+        title=res['title'],
+        releaseDate=x,
+        actor_id=res['actor_id']
+        
+      )
+      movie.insert()
+      
+    except Exception as e:
+      print('we couldnt create the object. Reason :', e)
+      abort(500)
 
-
-
-
-
-
-
-
+    return jsonify({
+            'status': True,
+            'movie': [movie.format()] 
+          })
 
 
   return app
