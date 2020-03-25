@@ -145,6 +145,36 @@ def create_app(test_config=None):
             'movie': [movie.format()] 
           })
 
+  @app.route('/actors/<id>', methods=['PATCH'])
+  def patch_actors(id):
+    res = request.get_json()
+
+    if not res:
+      abort(404)
+    
+    actor = Actor.query.get(id)
+    print(actor)
+    
+    try:
+      if 'name' in res:
+        actor.name=  res['name']
+      if 'age' in res:
+        actor.age=   res['age']
+      if 'gender' in res:
+        actor.gender=  res['gender']
+      
+      actor.update()
+
+    except Exception as e:
+      print('we couldnt create the object. Reason :', e)
+      abort(500)
+
+    return jsonify({
+            'status': True,
+            'movie': [actor.format()] 
+          })
+    
+
 
   return app
 
