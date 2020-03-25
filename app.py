@@ -202,6 +202,36 @@ def create_app(test_config=None):
             'movie': [movie.format()] 
           })
 
+  
+# Error Handling
+
+
+@app.errorhandler(422)
+def unprocessable(error):
+    return jsonify({
+                    "success": False,
+                    "error": 422,
+                    "message": "unprocessable."
+                    }), 422
+
+
+@app.errorhandler(404)
+def not_found(error):
+    return jsonify({
+        "success": False,
+        "error": 404,
+        "message": "The server can not find the requested resource."
+    }), 404
+
+
+@app.errorhandler(AuthError)
+def auth_error(error):
+    return jsonify({
+        "success": False,
+        "error": 401,
+        "message": "You are no authorized."
+    }), 401
+
 
   return app
 
