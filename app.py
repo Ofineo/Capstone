@@ -1,9 +1,10 @@
 import os
-from flask import Flask, request, abort, jsonify
+from flask import Flask, request, abort, jsonify, redirect
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 from models import setup_db, Actor, Movie
 import datetime
+from auth import AuthError, requires_auth
 
 
 def create_app(test_config=None):
@@ -31,7 +32,8 @@ def create_app(test_config=None):
         return greeting
 
     @app.route('/actors')
-    def get_actors():
+    @requires_auth('get:actors')
+    def get_actors(payload):
         selection = Actor.query.all()
 
         actors = []
@@ -45,7 +47,8 @@ def create_app(test_config=None):
         })
 
     @app.route('/movies')
-    def get_movies():
+    @requires_auth('get:movies')
+    def get_movies(payload):
         selection = Movie.query.all()
 
         movies = []
@@ -59,7 +62,8 @@ def create_app(test_config=None):
         })
 
     @app.route('/actors/<id>', methods=['DELETE'])
-    def delete_actor(id):
+    @requires_auth('delete:actors')
+    def delete_actor(payload, id):
         selection = Actor.query.get(id)
 
         print(selection)
@@ -78,7 +82,8 @@ def create_app(test_config=None):
         })
 
     @app.route('/movies/<id>', methods=['DELETE'])
-    def movie(id):
+    @requires_auth('delete:movies')
+    def movie(payload, id):
         selection = Movie.query.get(id)
 
         print(selection)
@@ -97,7 +102,8 @@ def create_app(test_config=None):
         })
 
     @app.route('/actors/add', methods=['POST'])
-    def post_actor():
+    @requires_auth('post:actors')
+    def post_actor(payload):
         res = request.get_json()
 
         if not res:
@@ -120,7 +126,8 @@ def create_app(test_config=None):
         })
 
     @app.route('/movies/add', methods=['POST'])
-    def post_movies():
+    @requires_auth('post:movie')
+    def post_movies(payload):
         res = request.get_json()
 
         x = datetime.datetime(2020, 5, 17)
@@ -130,7 +137,7 @@ def create_app(test_config=None):
             abort(400)
         try:
             index = 0
-            for actor in res['actor_id']:
+            for movie in res['actor_id']:
                 movie = Movie(
                     title=res['title'],
                     releaseDate=x,
@@ -150,7 +157,8 @@ def create_app(test_config=None):
         })
 
     @app.route('/actors/<id>', methods=['PATCH'])
-    def patch_actors(id):
+    @requires_auth('patch:actors')
+    def patch_actors(payload, id):
         res = request.get_json()
 
         if not res:
@@ -178,7 +186,8 @@ def create_app(test_config=None):
         })
 
     @app.route('/movies/<id>', methods=['PATCH'])
-    def patch_movies(id):
+    @requires_auth('patch:movies')
+    def patch_movies(payload, id):
         res = request.get_json()
 
         if not res:
@@ -207,6 +216,14 @@ def create_app(test_config=None):
 
     # Error Handling
 
+    @app.errorhandler(400)
+    def bad_request(error):
+        return jsonify({
+          "success": False, 
+          "error": 400,
+          "message": "bad request"
+          }), 400
+          
     @app.errorhandler(422)
     def unprocessable(error):
         return jsonify({
@@ -223,13 +240,21 @@ def create_app(test_config=None):
             "message": "The server can not find the requested resource."
         }), 404
 
-    # @app.errorhandler(AuthError)
-    # def auth_error(error):
-    #       return jsonify({
-    #           "success": False,
-    #           "error": 401,
-    #           "message": "You are no authorized."
-    #       }), 401
+    @app.errorhandler(405)
+    def method_not_allowed(error):
+          return jsonify({
+            "success": False, 
+            "error": 405,
+            "message": "method not allowed"
+            }), 405
+
+    @app.errorhandler(AuthError)
+    def auth_error(error):
+        return jsonify({
+            "success": False,
+            "error": 401,
+            "message": "You are no authorized."
+        }), 401
 
     return app
 
