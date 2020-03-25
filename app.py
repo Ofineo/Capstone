@@ -3,6 +3,7 @@ from flask import Flask, request, abort, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 from  models import setup_db, Actor, Movie
+import datetime
 
 
 def create_app(test_config=None):
@@ -24,6 +25,37 @@ def create_app(test_config=None):
     greeting = "Hi There" 
    
     return greeting
+
+  @app.route('/actors')
+  def get_actors():
+    selection = Actor.query.all()
+
+    actors = []
+
+    for actor in selection:
+      actors.append(actor.format())
+
+    return jsonify({
+      'status': True,
+      'actors': actors
+    })
+
+
+  @app.route('/movies')
+  def get_movies():
+    selection = Movie.query.all()
+
+    movies = []
+
+    for movie in selection:
+      movies.append(movie.format())
+
+    return jsonify({
+      'status': True,
+      'movies': movies
+    })
+
+ 
 
 
   return app
