@@ -55,7 +55,28 @@ def create_app(test_config=None):
       'movies': movies
     })
 
- 
+  @app.route('/actors/<id>', methods=['DELETE'])
+  def delete_actor(id):
+    selection = Actor.query.get(id)
+
+    print(selection)
+
+    if not selection:
+      abort(404)
+    
+    try:
+      selection.delete()
+    except Exception as e:
+      print('it could not be deleted', e)
+
+    return jsonify({
+      'status': True,
+      'actor': id
+    })
+
+    
+
+
 
 
   return app
