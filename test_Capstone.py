@@ -50,6 +50,17 @@ class CapstoneTestCase(unittest.TestCase):
         self.assertEqual(data['status'], True)
         self.assertEqual(data['actors'],[actor.format() for actor in selection])
    
+    def test_get_all_movies(self):
+        res = self.client().get('/movies', headers={'Authorization': 'Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6Ik9USXpNakl6UkVZMFJEQXdNRGN3UTBFNVF6TTBNekE0TURNMVF6bERRVGRFUVRNeE1VUXpNdyJ9.eyJpc3MiOiJodHRwczovL29maW5lby5ldS5hdXRoMC5jb20vIiwic3ViIjoiYXV0aDB8NWU3YzY4Y2ExMWRkNDkwYzZiM2VlNTM0IiwiYXVkIjoiY2Fwc3RvbmUiLCJpYXQiOjE1ODUyMTE3ODksImV4cCI6MTU4NTI5ODE4OSwiYXpwIjoiMzVNNTJYbEgxM1R6NDl6T3gzQXBkUTdrNmY3Y1Fnb2wiLCJzY29wZSI6IiIsInBlcm1pc3Npb25zIjpbImRlbGV0ZTphY3RvcnMiLCJkZWxldGU6bW92aWVzIiwiZ2V0OmFjdG9ycyIsImdldDptb3ZpZXMiLCJwYXRjaDphY3RvcnMiLCJwYXRjaDptb3ZpZXMiLCJwb3N0OmFjdG9ycyIsInBvc3Q6bW92aWVzIl19.s2ZdhS_O7cTCaD92vHdz_nnCI02VG4w4lWy_C5IOi7Ubx5O4HLEJUFKlqSXLOfAGnZrk1bwvhtC2uFcMT6dG8PFvS4zaWeMKVMQM0mFKKnAoEX_y9vXXyBAtj3tl7NqUqyYgK-Mtv-7-vaNnEC6wFNEzchkpAHU6M0KZ__RGcuuAWY9cSBClFiZmcc4CmHeO9GJJCjxau-gzPa9nEG7bvUkEFUGk4evu-ELPG4a9Nmna7JMVQ3eSry3SZnm0Z_uyzV7nUtHcWoD0Bc-xyuF5mt8NFm37PaHyaDLaypiwJ_HfoaWSNCucwuZfXTtZ76w_TvBToqOj9qo40zfOtOeYeQ'})
+        data = res.get_json()
+
+        selection = Movie.query.all()
+
+        self.maxDiff = None
+
+        self.assertEqual(data['status'], True)
+        self.assertEqual(data['movies'],[movie.format() for movie in selection])
+
     
 
 
