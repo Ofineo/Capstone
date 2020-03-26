@@ -82,13 +82,13 @@ def create_app(test_config=None):
     @app.route('/movies/<id>', methods=['DELETE'])
     @requires_auth('delete:movies')
     def movie(payload, id):
-        selection_id  = Movie.query.get(id)
+        selection_id = Movie.query.get(id)
 
         if not selection_id:
             abort(404)
 
         try:
-            selection = Movie.query.filter(Movie.title==selection_id.title).all()
+            selection = Movie.query.filter(Movie.title == selection_id.title).all()
             for movie in selection:
                 movie.delete()
         except Exception as e:
@@ -127,7 +127,7 @@ def create_app(test_config=None):
     @requires_auth('post:movies')
     def post_movies(payload):
         res = request.get_json()
-        
+
         movies = []
         if not res:
             abort(400)
