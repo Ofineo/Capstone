@@ -66,8 +66,6 @@ def create_app(test_config=None):
     def delete_actor(payload, id):
         selection = Actor.query.get(id)
 
-        print(selection)
-
         if not selection:
             abort(404)
 
