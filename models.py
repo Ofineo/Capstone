@@ -156,8 +156,8 @@ class Movie(db.Model):
 
     def format(self):
         return {
+            'actor_id': self.actor_id,
             'id': self.id,
+            'release date': self.releaseDate.strftime('%c'),
             'title': self.title,
-            'release date': self.releaseDate,
-            'actor_id': self.actor_id
         }

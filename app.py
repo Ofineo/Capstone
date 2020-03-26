@@ -129,9 +129,7 @@ def create_app(test_config=None):
     @requires_auth('post:movies')
     def post_movies(payload):
         res = request.get_json()
-
-        x = datetime.datetime(2020, 5, 17)
-
+        
         movies = []
         if not res:
             abort(400)
@@ -140,7 +138,7 @@ def create_app(test_config=None):
             for movie in res['actor_id']:
                 movie = Movie(
                     title=res['title'],
-                    releaseDate=x,
+                    releaseDate=datetime.datetime.strptime(res['releaseDate'], '%a, %d %b %Y %H:%M:%S %Z'),
                     actor_id=res['actor_id'][index]
                 )
                 movies.append(movie.format())
