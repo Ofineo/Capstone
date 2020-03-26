@@ -84,21 +84,21 @@ def create_app(test_config=None):
     @app.route('/movies/<id>', methods=['DELETE'])
     @requires_auth('delete:movies')
     def movie(payload, id):
-        selection = Movie.query.get(id)
+        selection_id  = Movie.query.get(id)
 
-        print(selection)
-
-        if not selection:
+        if not selection_id:
             abort(404)
 
         try:
-            selection.delete()
+            selection = Movie.query.filter(Movie.title==selection_id.title).all()
+            for movie in selection:
+                movie.delete()
         except Exception as e:
             print('it could not be deleted', e)
 
         return jsonify({
             'status': True,
-            'movie': id
+            'movie': selection_id.title
         })
 
     @app.route('/actors/add', methods=['POST'])
