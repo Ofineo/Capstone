@@ -126,7 +126,7 @@ def create_app(test_config=None):
         })
 
     @app.route('/movies/add', methods=['POST'])
-    @requires_auth('post:movie')
+    @requires_auth('post:movies')
     def post_movies(payload):
         res = request.get_json()
 
