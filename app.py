@@ -13,8 +13,6 @@ def create_app(test_config=None):
     setup_db(app)
     CORS(app)
 
-    # cors = CORS(app, resources={r"127.0.0.1/*":{"origins":"*"}})
-
     @app.after_request
     def after_request(response):
         response.headers.add(
@@ -254,7 +252,4 @@ def create_app(test_config=None):
 
     return app
 
-    # APP = create_app()
-
-    # if __name__ == '__main__':
-    #     APP.run(host='0.0.0.0', port=8080, debug=True)
+APP = create_app()
